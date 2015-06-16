@@ -6,23 +6,28 @@ define([
     var OfficeForm;
 
     OfficeForm = React.createClass({
+        _onChange: function (e) {
+            var state;
+            state = {};
+            state[e.target.name] = e.target.value;
+            this.setState(state);
+        },
         _onSubmit: function (e) {
-            var $employeeCount
-              , $id
-              , $name;
-                
             e.preventDefault();
             e.stopPropagation();
 
-            $employeeCount = React.findDOMNode(this.refs['employeeCount']);
-            $id = React.findDOMNode(this.refs['id']);
-            $name = React.findDOMNode(this.refs['name']);
-
             this.props.onSubmit({
-                employeeCount: parseInt($employeeCount.value) || null,
-                id: parseInt($id.value) || null,
-                name: $name.value || null
+                employeeCount: parseInt(this.state.employeeCount) || null,
+                id: parseInt(this.state.id) || null,
+                name: this.state.name || null
             });
+        },
+        getInitialState: function () {
+            return {
+                employeeCount: this.props.employeeCount,
+                id: this.props.id,
+                name: this.props.name
+            };
         },
         getDefaultProps: function () {
             return {
@@ -39,22 +44,25 @@ define([
                                readOnly
                                ref='id'
                                type='number'
-                               value={this.props.id} />
+                               value={this.state.id} />
                     </div>
                     <div>
                         <label>Name</label>
-                        <input defaultValue={this.props.name}
-                               name='name'
+                        <input name='name'
+                               onChange={this._onChange}
                                ref='name'
-                               type='text' />
-                               
+                               type='text'
+                               value={this.state.name} />
+
                     </div>
                     <div>
                         <label>Number of Employees</label>
-                        <input defaultValue={this.props.employeeCount}
-                               name='employeeCount'
+                        <input name='employeeCount'
+                               onChange={this._onChange}
                                ref='employeeCount'
-                               type='number' />
+                               type='number'
+                               value={this.state.employeeCount} />
+
                     </div>
                     <div>
                         <button type='submit'>Save</button>

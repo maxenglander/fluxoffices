@@ -11,6 +11,8 @@ define([
         _onSubmit: function (office) {
             this.props.onUpdate(office);
         },
+        componentDidMount: function () {
+        },
         getDefaultProps: function () {
             return {
                 disabed: false,

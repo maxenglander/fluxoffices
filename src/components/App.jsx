@@ -54,20 +54,19 @@ define([
         _onEdit: function (e) {
             var officeId;
 
-
             e.preventDefault();
             e.stopPropagation();
 
             officeId = parseInt(e.target.dataset.officeId);
 
             this.setState({
+                editingOfficeId: officeId,
                 isEditing: true
             }, function () {
                 OfficeActions.getOffice(officeId);
             });
         },
         _onUpdate: function (office) {
-            console.log('App _onUpdate', office);
             this.setState({
                 isCommitting: true
             }, function () {
@@ -108,10 +107,11 @@ define([
         },
         getInitialState: function () {
             return {
-                office: null,
-                offices: [],
+                editingOfficeId: null,
                 isCommitting: false,
-                isEditing: false
+                isEditing: false,
+                office: null,
+                offices: []
             }
         },
         render: function () {

@@ -14,6 +14,8 @@ define([
             }
             this.props.onCreate(office);
         },
+        componentDidMount: function () {
+        },
         getDefaultProps: function () {
             return {
                 onCreate: function (office) {}
