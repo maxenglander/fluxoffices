@@ -4,10 +4,14 @@ define([
     keymirror
 ) {
     return keymirror({
+        OFFICE_CREATED: null,
+        OFFICE_CREATING: null,
+        OFFICE_DELETED: null,
+        OFFICE_DELETING: null,
         OFFICE_NOT_FOUND: null,
         OFFICE_RECEIVED: null,
-        OFFICE_REQUESTED: null,
+        OFFICE_RECEIVING: null,
         OFFICES_RECEIVED: null,
-        OFFICES_REQUESTED: null
+        OFFICES_RECEIVING: null
     });
 });

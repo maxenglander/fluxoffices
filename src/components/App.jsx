@@ -3,17 +3,34 @@ define([
     'actions/OfficeActions',
     'constants/ActionTypes',
     'dispatchers/Dispatcher',
-    'stores/OfficeStore'
+    'stores/OfficeStore',
+    './OfficeCreator',
+    './OfficeEditor'
 ], function (
     React,
     OfficeActions,
     ActionTypes,
     Dispatcher,
-    OfficeStore
+    OfficeStore,
+    OfficeCreator,
+    OfficeEditor
 ) {
     var App;
 
     App = React.createClass({
+        _onCreate: function (office) {
+            this.setState({
+                committing: true
+            }, function () {
+                OfficeActions.createOffice(office);
+            });
+        },
+        _onCreated: function (office) {
+            this.setState({
+                committing: false,
+                offices: OfficeStore.getAll()
+            });
+        },
         _onDelete: function (e) {
             var officeId;
 
@@ -21,14 +38,52 @@ define([
             e.stopPropagation();
 
             officeId = parseInt(e.target.dataset.officeId);
+
+            this.setState({
+                committing: true
+            }, function () {
+                OfficeActions.deleteOffice(officeId);
+            });
+        },
+        _onDeleted: function (office) {
+            this.setState({
+                committing: false,
+                offices: OfficeStore.getAll()
+            });
         },
         _onEdit: function (e) {
             var officeId;
+
 
             e.preventDefault();
             e.stopPropagation();
 
             officeId = parseInt(e.target.dataset.officeId);
+
+            this.setState({
+                isEditing: true
+            }, function () {
+                OfficeActions.getOffice(officeId);
+            });
+        },
+        _onUpdate: function (office) {
+            console.log('App _onUpdate', office);
+            this.setState({
+                isCommitting: true
+            }, function () {
+                OfficeActions.updateOffice(office);
+            });
+        },
+        _onUpdated: function (office) {
+            this.setState({
+                isCommitting: false,
+                offices: OfficeStore.getAll()
+            });
+        },
+        _setOffice: function (office) {
+            this.setState({
+                office: office
+            });
         },
         _setOffices: function (offices) {
             this.setState({
@@ -36,22 +91,37 @@ define([
             });
         },
         componentDidMount: function () {
-            OfficeStore.on(ActionTypes.OFFICE_RECEIVED, this._setOffices);
+            OfficeStore.on(ActionTypes.OFFICE_CREATED, this._onCreated);
+            OfficeStore.on(ActionTypes.OFFICE_DELETED, this._onDeleted);
+            OfficeStore.on(ActionTypes.OFFICE_RECEIVED, this._setOffice);
+            OfficeStore.on(ActionTypes.OFFICES_RECEIVED, this._setOffices);
+            OfficeStore.on(ActionTypes.OFFICE_UPDATED, this._onUpdated);
+
             OfficeActions.getOffices();
         },
-        componentWillUnmoun: function () {
-            OfficeStore.off(ActionTypes.OFFICE_RECIEVED, this._setOffices);
+        componentWillUnmount: function () {
+            OfficeStore.off(ActionTypes.OFFICE_CREATED, this._onCreated);
+            OfficeStore.off(ActionTypes.OFFICE_DELETED, this._onDeleted);
+            OfficeStore.off(ActionTypes.OFFICE_RECEIVED, this._setOffice);
+            OfficeStore.off(ActionTypes.OFFICES_RECEIVED, this._setOffices);
+            OfficeStore.off(ActionTypes.OFFICE_UPDATED, this._onUpdated);
         },
         getInitialState: function () {
             return {
-                offices: []
+                office: null,
+                offices: [],
+                isCommitting: false,
+                isEditing: false
             }
         },
         render: function () {
             var editor
               , offices;
 
-            editor = false;
+            editor = this.state.isEditing && this.state.office
+              ? <OfficeEditor {...this.state.office}
+                              onUpdate={this._onUpdate} />
+              : <OfficeCreator onCreate={this._onCreate} />;
 
             offices = this.state.offices.map(function (office) {
                 return (
@@ -65,10 +135,11 @@ define([
                         ]</span>
                     </li>
                 );
-            });
+            }.bind(this));
 
             return (
                 <div>
+                    {editor}
                     <ul className='office-list'>
                         {offices}
                     </ul>

@@ -1,6 +1,6 @@
 define([
     'React',
-    './components/App'
+    'components/App'
 ], function (
     React,
     App

@@ -14,6 +14,7 @@ gulp.task('webpack', function (callback) {
         if (err) {
             throw new gutil.PluginError(err);
         }
+        gutil.log(stats.toString());
         callback();
     });
 });
