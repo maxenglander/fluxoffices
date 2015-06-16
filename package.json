@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "events": "^1.0.2",
+    "finalhandler": "^0.4.0",
+    "flux": "^2.0.3",
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.5",
+    "html-webpack-plugin": "^1.5.2",
+    "keymirror": "^0.1.1",
+    "object-assign": "^3.0.0",
+    "react": "^0.13.3",
+    "serve-static": "^1.9.3",
+    "webpack": "^1.9.11"
+  }
+}
