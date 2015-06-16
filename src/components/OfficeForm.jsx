@@ -10,6 +10,7 @@ define([
             var state;
             state = {};
             state[e.target.name] = e.target.value;
+            console.log('OfficeForm _onChange updating state', state);
             this.setState(state);
         },
         _onSubmit: function (e) {

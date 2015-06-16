@@ -120,6 +120,7 @@ define([
 
             editor = this.state.isEditing && this.state.office
               ? <OfficeEditor {...this.state.office}
+                              key={'edit-office-' + this.state.office.id}
                               onUpdate={this._onUpdate} />
               : <OfficeCreator onCreate={this._onCreate} />;
 
