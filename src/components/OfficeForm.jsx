@@ -6,11 +6,20 @@ define([
     var OfficeForm;
 
     OfficeForm = React.createClass({
+        _onCancel: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.props.onCancel();
+        },
         _onChange: function (e) {
             var state;
+            
+            e.preventDefault();
+            e.stopPropagation();
+
             state = {};
             state[e.target.name] = e.target.value;
-            console.log('OfficeForm _onChange updating state', state);
             this.setState(state);
         },
         _onSubmit: function (e) {
@@ -32,7 +41,10 @@ define([
         },
         getDefaultProps: function () {
             return {
-                onSubmit: function () {}
+                cancelText: 'Cancel',
+                onCancel: function () {},
+                onSubmit: function () {},
+                submitText: 'Submit'
             };
         },
         render: function () {
@@ -66,10 +78,15 @@ define([
 
                     </div>
                     <div>
-                        <button type='submit'>Save</button>
+                        <button type='submit'>{this.props.submitText}</button>
+                        <button onClick={this._onCancel}
+                                type='submit'>{this.props.cancelText}</button>
                     </div>
                 </form>
             );
+        },
+        reset: function () {
+            this.setState(this.getInitialState());
         }
     });
 

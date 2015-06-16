@@ -18,6 +18,12 @@ define([
     var App;
 
     App = React.createClass({
+        _onCancelEdit: function () {
+            this.setState({
+                isEditing: false,
+                office: null
+            });
+        },
         _onCreate: function (office) {
             this.setState({
                 committing: true
@@ -74,6 +80,7 @@ define([
             });
         },
         _onUpdated: function (office) {
+            console.log('App _onUpdated', OfficeStore.getAll().toArray());
             this.setState({
                 isCommitting: false,
                 offices: OfficeStore.getAll()
@@ -120,9 +127,12 @@ define([
 
             editor = this.state.isEditing && this.state.office
               ? <OfficeEditor {...this.state.office}
+                              disabled={this.state.isCommitting}
                               key={'edit-office-' + this.state.office.id}
+                              onCancel={this._onCancelEdit}
                               onUpdate={this._onUpdate} />
-              : <OfficeCreator onCreate={this._onCreate} />;
+              : <OfficeCreator disabled={this.state.isCommitting}
+                               onCreate={this._onCreate} />;
 
             offices = this.state.offices.map(function (office) {
                 return (
